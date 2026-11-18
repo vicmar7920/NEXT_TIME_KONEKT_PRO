@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐼 Espacio de Estudio — Suite Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Tema Base Predeterminado: Azul Cielo Sereno */
+            --bg-gradient: linear-gradient(135deg, #d7ecfa 0%, #badff5 50%, #cde6f7 100%);
+            --card-bg: rgba(242, 249, 255, 0.76);
+            --card-hover-bg: rgba(248, 252, 255, 0.92);
+            --card-border: rgba(56, 152, 214, 0.32);
+            --card-hover-border: #0284c7;
+            --text-main: #0f2c47;
+            --text-muted: #335c81;
+            --accent: #0284c7;
+            --accent-hover: #0369a1;
+            --btn-text: #f0f9ff;
+            --badge-bg: rgba(255, 255, 255, 0.55);
+            --note-bg: rgba(235, 246, 255, 0.82);
+            --note-border: rgba(14, 116, 144, 0.35);
+            --note-title: #0c4a6e;
+            --note-text: #1e4976;
+            --bubble-bg: rgba(245, 251, 255, 0.92);
+            --bubble-text: #0f2c47;
+            --sticker-glow: rgba(255, 255, 255, 0.95);
+            --shadow-color: rgba(15, 44, 71, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 28px 65px 28px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- STICKERS DE FONDO FLOTANTES Y BRILLANTES --- */
+        .floating-bg-sticker {
+            position: fixed;
+            font-size: 2.15rem;
+            opacity: 0.82;
+            pointer-events: none;
+            z-index: 0;
+            filter: drop-shadow(0 0 8px var(--sticker-glow)) drop-shadow(0 4px 10px rgba(2, 132, 199, 0.25));
+            animation: floatAndGlow 6.5s ease-in-out infinite;
+        }
+        .s1 { top: 6%; left: 4%; animation-delay: 0s; font-size: 2.35rem; }
+        .s2 { top: 13%; right: 7%; animation-delay: 1.2s; font-size: 1.95rem; }
+        .s3 { bottom: 14%; left: 5%; animation-delay: 2.5s; font-size: 2.25rem; }
+        .s4 { bottom: 16%; right: 7%; animation-delay: 1.8s; font-size: 2.05rem; }
+        .s5 { top: 39%; left: 2.5%; animation-delay: 3.2s; font-size: 1.85rem; }
+        .s6 { top: 58%; right: 3.5%; animation-delay: 0.8s; font-size: 2.1rem; }
+        .s7 { top: 23%; left: 10%; animation-delay: 2.2s; font-size: 1.75rem; }
+        .s8 { top: 79%; left: 14%; animation-delay: 3.8s; font-size: 1.95rem; }
+        .s9 { top: 46%; right: 11%; animation-delay: 2.9s; font-size: 1.85rem; }
+
+        @keyframes floatAndGlow {
+            0%, 100% {
+                transform: translateY(0px) rotate(-5deg) scale(1);
+                filter: drop-shadow(0 0 6px var(--sticker-glow)) drop-shadow(0 3px 8px rgba(2, 132, 199, 0.2));
+            }
+            50% {
+                transform: translateY(-15px) rotate(7deg) scale(1.08);
+                filter: drop-shadow(0 0 14px #ffffff) drop-shadow(0 0 18px rgba(56, 189, 248, 0.55));
+            }
+        }
+
+        /* --- PALETA VERTICAL A LA DERECHA --- */
+        .theme-bar-vertical {
+            position: fixed;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 2px solid var(--card-border);
+            padding: 10px 7px;
+            border-radius: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .theme-bar-vertical span {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .color-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .color-dot:hover {
+            transform: scale(1.25);
+        }
+
+        /* --- CABECERA Y PANDA CON BURBUJA DE DIÁLOGO --- */
+        header {
+            z-index: 10;
+            text-align: center;
+            max-width: 780px;
+            margin-bottom: 10px;
+        }
+
+        .top-badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .mini-badge {
+            background: var(--badge-bg);
+            backdrop-filter: blur(10px);
+            border: 1.5px solid var(--card-border);
+            color: var(--text-main);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .panda-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .speech-bubble {
+            background: var(--bubble-bg);
+            backdrop-filter: blur(12px);
+            color: var(--bubble-text);
+            padding: 11px 22px;
+            border-radius: 22px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            box-shadow: 0 6px 18px var(--shadow-color);
+            position: relative;
+            margin-bottom: 9px;
+            max-width: 350px;
+            text-align: center;
+            border: 2px solid var(--card-border);
+            transition: opacity 0.3s ease;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--bubble-bg) transparent;
+            display: block;
+            width: 0;
+        }
+
+        .mascot-hero {
+            font-size: 4.6rem;
+            display: inline-block;
+            filter: drop-shadow(0 6px 12px rgba(15, 44, 71, 0.16));
+            animation: pandaDanceAuto 3s ease-in-out infinite;
+        }
+        .mascot-hero:hover {
+            animation: fastWiggle 0.4s ease-in-out infinite;
+        }
+
+        @keyframes pandaDanceAuto {
+            0%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
+            25% { transform: translateX(-10px) rotate(-8deg) scale(1.03); }
+            75% { transform: translateX(10px) rotate(8deg) scale(1.03); }
+        }
+        @keyframes fastWiggle {
+            0%, 100% { transform: rotate(-12deg) scale(1.08); }
+            50% { transform: rotate(12deg) scale(1.08); }
+        }
+
+        header h1 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 2.35rem;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        /* --- CONTENEDOR DE TARJETAS --- */
+        .hub-container {
+            z-index: 10;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            width: 100%;
+            max-width: 1020px;
+            margin: 20px 0;
+        }
+
+        .hub-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 2px solid var(--card-border);
+            border-radius: 28px;
+            padding: 28px 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 25px var(--shadow-color);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hub-card:hover {
+            transform: translateY(-6px);
+            background: var(--card-hover-bg);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-sticker {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .hub-tag {
+            background: var(--badge-bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            font-size: 0.76rem;
+            font-weight: 800;
+            padding: 4px 14px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        /* Títulos limpios sin brillo */
+        .hub-title {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .hub-desc {
+            font-size: 0.94rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .hub-btn {
+            background: var(--accent);
+            color: var(--btn-text);
+            border: none;
+            padding: 13px 24px;
+            border-radius: 50px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .hub-card:hover .hub-btn {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+
+        /* --- NOTITA CUTE DE JUEGO Y MONEDAS (ABAJO DE LOS TRES BLOQUES) --- */
+        .cozy-game-note {
+            z-index: 10;
+            max-width: 1020px;
+            width: 100%;
+            background: var(--note-bg);
+            backdrop-filter: blur(12px);
+            border: 2px dashed var(--note-border);
+            border-radius: 24px;
+            padding: 16px 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 20px var(--shadow-color);
+            text-align: left;
+        }
+
+        .note-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .note-text h3 {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: var(--note-title);
+            margin-bottom: 4px;
+        }
+
+        .note-text p {
+            font-size: 0.91rem;
+            color: var(--note-text);
+            font-weight: 600;
+            line-height: 1.45;
+        }
+
+        footer {
+            z-index: 10;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.87rem;
+            font-weight: 700;
+            padding: 12px 24px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1.5px solid var(--card-border);
+            width: 100%;
+            max-width: 1020px;
+            box-shadow: 0 4px 14px var(--shadow-color);
+        }
+
+        @media (max-width: 600px) {
+            body { padding-right: 52px; }
+            .theme-bar-vertical { right: 5px; padding: 8px 5px; gap: 6px; }
+            .color-dot { width: 18px; height: 18px; }
+            .cozy-game-note { flex-direction: column; text-align: center; }
+            header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Stickers de fondo con brillo suave -->
+    <div class="floating-bg-sticker s1">📖</div>
+    <div class="floating-bg-sticker s2">✏️</div>
+    <div class="floating-bg-sticker s3">🎓</div>
+    <div class="floating-bg-sticker s4">⚙️</div>
+    <div class="floating-bg-sticker s5">📐</div>
+    <div class="floating-bg-sticker s6">🧪</div>
+    <div class="floating-bg-sticker s7">💻</div>
+    <div class="floating-bg-sticker s8">🎨</div>
+    <div class="floating-bg-sticker s9">📝</div>
+
+    <!-- Paleta Vertical de Colores (Azul, Rosado, Morado, Rojo, Amarillo, Verde, Café, Negro) -->
+    <div class="theme-bar-vertical" title="Cambia el color de tu espacio">
+        <span>🎨</span>
+        <button class="color-dot" style="background: linear-gradient(135deg, #ffffff, #bae6fd);" title="Azul Cielo (Predeterminado)" onclick="selectTheme('sky')"></button>
+        <button class="color-dot" style="background: linear-gradient(135deg, #ffffff, #fbcfe8);" title="Rosado" onclick="selectTheme('pink')"></button>
+        <button class="color-dot" style="background: linear-gradient(135deg, #ffffff, #e9d5ff);" title="Morado" onclick="selectTheme('purple')"></button>
+        <button class="color-dot" style="background: linear-gradient(135deg, #ffffff, #fecaca);" title="Rojo" onclick="selectTheme('red')"></button>
+        <button class="color-dot" style="background: linear-gradient(135deg, #ffffff, #fef08a);" title="Amarillo" onclick="selectTheme('yellow')"></button>
+        <button class="color-dot" style="background: linear-gradient(135deg, #ffffff, #bbf7d0);" title="Verde" onclick="selectTheme('green')"></button>
+        <button class="color-dot" style="background: linear-gradient(135deg, #ffffff, #d7ccc8);" title="Café" onclick="selectTheme('brown')"></button>
+        <button class="color-dot" style="background: linear-gradient(135deg, #ffffff, #27272a);" title="Negro" onclick="selectTheme('black')"></button>
+    </div>
+
+    <!-- Cabecera con Panda, su burbuja y movimiento constante -->
+    <header>
+        <div class="top-badges">
+            <span class="mini-badge">💻📱 Ideal para Compu y Tablet</span>
+        </div>
+        
+        <div class="panda-container" onclick="petPanda()" title="¡Hazme clic!">
+            <div class="speech-bubble" id="panda-speech">¡Hola, nos vamos a divertir y enfocar mucho! ✨</div>
+            <div class="mascot-hero">🐼</div>
+        </div>
+
+        <h1>¡Hola! Qué bueno verte por aquí</h1>
+    </header>
+
+    <!-- Tarjetas de las 3 herramientas -->
+    <div class="hub-container">
+        
+        <!-- 1. TIME PRO -->
+        <a href="https://vicmar7920.github.io/TIME-PRO-/" target="_blank" class="hub-card" onclick="playClickSound()">
+            <div>
+                <div class="card-sticker">🍅</div>
+                <div class="hub-tag">Enfoque & Mascotas</div>
+                <div class="hub-title">Time Pro</div>
+                <div class="hub-desc">Estudia por bloques sin estrés, cuida a tu mascota virtual y gana moneditas cada vez que te concentras.</div>
+            </div>
+            <button class="hub-btn">Entrar a estudiar ⏱️</button>
+        </a>
+
+        <!-- 2. NEXT-UP PRO -->
+        <a href="https://vicmar7920.github.io/NEXT-UP_PRO/" target="_blank" class="hub-card" onclick="playClickSound()">
+            <div>
+                <div class="card-sticker">✅</div>
+                <div class="hub-tag">Organización Ligera</div>
+                <div class="hub-title">Next-Up Pro</div>
+                <div class="hub-desc">Anota tus pendientes del día y ve tachando cada logro paso a paso para ganar recompensas.</div>
+            </div>
+            <button class="hub-btn">Ver mis tareas 📋</button>
+        </a>
+
+        <!-- 3. KONEKT PRO -->
+        <a href="https://vicmar7920.github.io/KONEKT_PRO-MR/" target="_blank" class="hub-card" onclick="playClickSound()">
+            <div>
+                <div class="card-sticker">🧠</div>
+                <div class="hub-tag">Ideas & Esquemas</div>
+                <div class="hub-title">Konekt Pro</div>
+                <div class="hub-desc">Conecta tus apuntes en mapas conceptuales llenos de color, notas y stickers lindos.</div>
+            </div>
+            <button class="hub-btn">Crear mi mapa 🗺️</button>
+        </a>
+
+    </div>
+
+    <!-- Notita aclaratoria de juegos y monedas (Abajo de los 3 bloques) -->
+    <div class="cozy-game-note">
+        <div class="note-icon">🪙</div>
+        <div class="note-text">
+            <h3>✨ Todo es 100% gratis (¡cero dinero real!)</h3>
+            <p>
+                Diseñado para cualquier carrera universitaria o escolar. Adentro de cada app encontrarás una <strong>tiendita con premios</strong>, pero todo se desbloquea usando <strong>moneditas virtuales</strong> que ganas estudiando y cumpliendo tus metas. ¡Sin registros ni pagos!
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        🐼 Tu rincón personal de estudio — ¡Hecho para romperla en tu carrera!
+    </footer>
+
+    <script>
+        // Diccionario con los 8 temas combinados con blanco (Azul, Rosado, Morado, Rojo, Amarillo, Verde, Café, Negro)
+        const themes = {
+            sky: {
+                bg: 'linear-gradient(135deg, #d7ecfa 0%, #badff5 50%, #cde6f7 100%)',
+                cardBg: 'rgba(242, 249, 255, 0.76)',
+                hoverBg: 'rgba(248, 252, 255, 0.92)',
+                border: 'rgba(56, 152, 214, 0.32)',
+                hoverBorder: '#0284c7',
+                textMain: '#0f2c47',
+                textMuted: '#335c81',
+                accent: '#0284c7',
+                accentHover: '#0369a1',
+                btnText: '#f0f9ff',
+                badgeBg: 'rgba(255, 255, 255, 0.55)',
+                noteBg: 'rgba(235, 246, 255, 0.82)',
+                noteBorder: 'rgba(14, 116, 144, 0.35)',
+                noteTitle: '#0c4a6e',
+                noteText: '#1e4976',
+                bubbleBg: 'rgba(245, 251, 255, 0.92)',
+                bubbleText: '#0f2c47',
+                stickerGlow: 'rgba(255, 255, 255, 0.95)'
+            },
+            pink: {
+                bg: 'linear-gradient(135deg, #fdf2f8 0%, #fbcfe8 50%, #fce7f3 100%)',
+                cardBg: 'rgba(255, 255, 255, 0.82)',
+                hoverBg: 'rgba(255, 255, 255, 0.95)',
+                border: 'rgba(244, 114, 182, 0.35)',
+                hoverBorder: '#db2777',
+                textMain: '#831843',
+                textMuted: '#9d174d',
+                accent: '#db2777',
+                accentHover: '#be185d',
+                btnText: '#ffffff',
+                badgeBg: 'rgba(255, 255, 255, 0.6)',
+                noteBg: 'rgba(253, 242, 248, 0.88)',
+                noteBorder: 'rgba(244, 114, 182, 0.4)',
+                noteTitle: '#831843',
+                noteText: '#9d174d',
+                bubbleBg: 'rgba(255, 255, 255, 0.95)',
+                bubbleText: '#831843',
+                stickerGlow: 'rgba(244, 114, 182, 0.8)'
+            },
+            purple: {
+                bg: 'linear-gradient(135deg, #faf5ff 0%, #e9d5ff 50%, #f3e8ff 100%)',
+                cardBg: 'rgba(255, 255, 255, 0.82)',
+                hoverBg: 'rgba(255, 255, 255, 0.95)',
+                border: 'rgba(192, 132, 252, 0.35)',
+                hoverBorder: '#9333ea',
+                textMain: '#4c1d95',
+                textMuted: '#6b21a8',
+                accent: '#9333ea',
+                accentHover: '#7e22ce',
+                btnText: '#ffffff',
+                badgeBg: 'rgba(255, 255, 255, 0.6)',
+                noteBg: 'rgba(250, 245, 255, 0.88)',
+                noteBorder: 'rgba(192, 132, 252, 0.4)',
+                noteTitle: '#4c1d95',
+                noteText: '#6b21a8',
+                bubbleBg: 'rgba(255, 255, 255, 0.95)',
+                bubbleText: '#4c1d95',
+                stickerGlow: 'rgba(192, 132, 252, 0.8)'
+            },
+            red: {
+                bg: 'linear-gradient(135deg, #fef2f2 0%, #fecaca 50%, #fee2e2 100%)',
+                cardBg: 'rgba(255, 255, 255, 0.82)',
+                hoverBg: 'rgba(255, 255, 255, 0.95)',
+                border: 'rgba(248, 113, 113, 0.35)',
+                hoverBorder: '#dc2626',
+                textMain: '#7f1d1d',
+                textMuted: '#991b1b',
+                accent: '#dc2626',
+                accentHover: '#b91c1c',
+                btnText: '#ffffff',
+                badgeBg: 'rgba(255, 255, 255, 0.6)',
+                noteBg: 'rgba(254, 242, 242, 0.88)',
+                noteBorder: 'rgba(248, 113, 113, 0.4)',
+                noteTitle: '#7f1d1d',
+                noteText: '#991b1b',
+                bubbleBg: 'rgba(255, 255, 255, 0.95)',
+                bubbleText: '#7f1d1d',
+                stickerGlow: 'rgba(248, 113, 113, 0.8)'
+            },
+            yellow: {
+                bg: 'linear-gradient(135deg, #fefce8 0%, #fef08a 50%, #fef9c3 100%)',
+                cardBg: 'rgba(255, 255, 255, 0.82)',
+                hoverBg: 'rgba(255, 255, 255, 0.95)',
+                border: 'rgba(250, 204, 21, 0.4)',
+                hoverBorder: '#ca8a04',
+                textMain: '#713f12',
+                textMuted: '#854d0e',
+                accent: '#ca8a04',
+                accentHover: '#a16207',
+                btnText: '#ffffff',
+                badgeBg: 'rgba(255, 255, 255, 0.6)',
+                noteBg: 'rgba(254, 252, 232, 0.88)',
+                noteBorder: 'rgba(250, 204, 21, 0.45)',
+                noteTitle: '#713f12',
+                noteText: '#854d0e',
+                bubbleBg: 'rgba(255, 255, 255, 0.95)',
+                bubbleText: '#713f12',
+                stickerGlow: 'rgba(250, 204, 21, 0.8)'
+            },
+            green: {
+                bg: 'linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 50%, #dcfce7 100%)',
+                cardBg: 'rgba(255, 255, 255, 0.82)',
+                hoverBg: 'rgba(255, 255, 255, 0.95)',
+                border: 'rgba(74, 222, 128, 0.35)',
+                hoverBorder: '#16a34a',
+                textMain: '#14532d',
+                textMuted: '#166534',
+                accent: '#16a34a',
+                accentHover: '#15803d',
+                btnText: '#ffffff',
+                badgeBg: 'rgba(255, 255, 255, 0.6)',
+                noteBg: 'rgba(240, 253, 244, 0.88)',
+                noteBorder: 'rgba(74, 222, 128, 0.4)',
+                noteTitle: '#14532d',
+                noteText: '#166534',
+                bubbleBg: 'rgba(255, 255, 255, 0.95)',
+                bubbleText: '#14532d',
+                stickerGlow: 'rgba(74, 222, 128, 0.8)'
+            },
+            brown: {
+                bg: 'linear-gradient(135deg, #fdf8f6 0%, #d7ccc8 50%, #efebe9 100%)',
+                cardBg: 'rgba(255, 255, 255, 0.82)',
+                hoverBg: 'rgba(255, 255, 255, 0.95)',
+                border: 'rgba(188, 170, 164, 0.4)',
+                hoverBorder: '#795548',
+                textMain: '#3e2723',
+                textMuted: '#5d4037',
+                accent: '#795548',
+                accentHover: '#5d4037',
+                btnText: '#ffffff',
+                badgeBg: 'rgba(255, 255, 255, 0.6)',
+                noteBg: 'rgba(253, 248, 246, 0.88)',
+                noteBorder: 'rgba(188, 170, 164, 0.45)',
+                noteTitle: '#3e2723',
+                noteText: '#5d4037',
+                bubbleBg: 'rgba(255, 255, 255, 0.95)',
+                bubbleText: '#3e2723',
+                stickerGlow: 'rgba(188, 170, 164, 0.8)'
+            },
+            black: {
+                bg: 'linear-gradient(135deg, #18181b 0%, #27272a 50%, #09090b 100%)',
+                cardBg: 'rgba(39, 39, 42, 0.8)',
+                hoverBg: 'rgba(63, 63, 70, 0.9)',
+                border: 'rgba(255, 255, 255, 0.2)',
+                hoverBorder: '#ffffff',
+                textMain: '#f4f4f5',
+                textMuted: '#d4d4d8',
+                accent: '#e4e4e7',
+                accentHover: '#ffffff',
+                btnText: '#18181b',
+                badgeBg: 'rgba(255, 255, 255, 0.1)',
+                noteBg: 'rgba(24, 24, 27, 0.88)',
+                noteBorder: 'rgba(255, 255, 255, 0.25)',
+                noteTitle: '#f4f4f5',
+                noteText: '#d4d4d8',
+                bubbleBg: 'rgba(39, 39, 42, 0.95)',
+                bubbleText: '#f4f4f5',
+                stickerGlow: 'rgba(255, 255, 255, 0.6)'
+            }
+        };
+
+        function playClickSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(580, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.09);
+            } catch (e) {}
+        }
+
+        function applyCozyTheme(themeKey) {
+            const t = themes[themeKey] || themes.sky;
+            const root = document.documentElement;
+            root.style.setProperty('--bg-gradient', t.bg);
+            root.style.setProperty('--card-bg', t.cardBg);
+            root.style.setProperty('--card-hover-bg', t.hoverBg);
+            root.style.setProperty('--card-border', t.border);
+            root.style.setProperty('--card-hover-border', t.hoverBorder);
+            root.style.setProperty('--text-main', t.textMain);
+            root.style.setProperty('--text-muted', t.textMuted);
+            root.style.setProperty('--accent', t.accent);
+            root.style.setProperty('--accent-hover', t.accentHover);
+            root.style.setProperty('--btn-text', t.btnText);
+            root.style.setProperty('--badge-bg', t.badgeBg);
+            root.style.setProperty('--note-bg', t.noteBg);
+            root.style.setProperty('--note-border', t.noteBorder);
+            root.style.setProperty('--note-title', t.noteTitle);
+            root.style.setProperty('--note-text', t.noteText);
+            root.style.setProperty('--bubble-bg', t.bubbleBg);
+            root.style.setProperty('--bubble-text', t.bubbleText);
+            root.style.setProperty('--sticker-glow', t.stickerGlow);
+            localStorage.setItem('study_hub_theme_v10', themeKey);
+        }
+
+        function selectTheme(themeKey) {
+            playClickSound();
+            applyCozyTheme(themeKey);
+        }
+
+        // Frases del panda (cambian cada 15 segundos con calma)
+        const pandaMessages = [
+            "¡Hola, nos vamos a divertir y enfocar mucho! ✨🐼",
+            "¡Imparable! Hoy vas a dominar cualquier materia 📚🔥",
+            "Recuerda hacer pequeñas pausas para estirar y respirar 💧",
+            "Paso a paso se construyen los grandes profesionales 🎓💡",
+            "¡A romperla con esas metas de estudio de hoy! 🚀"
+        ];
+
+        let msgIndex = 0;
+        function petPanda() {
+            playClickSound();
+            msgIndex = (msgIndex + 1) % pandaMessages.length;
+            const bubble = document.getElementById('panda-speech');
+            bubble.style.opacity = '0';
+            setTimeout(() => {
+                bubble.innerText = pandaMessages[msgIndex];
+                bubble.style.opacity = '1';
+            }, 150);
+        }
+
+        setInterval(() => {
+            msgIndex = (msgIndex + 1) % pandaMessages.length;
+            const bubble = document.getElementById('panda-speech');
+            if(bubble) {
+                bubble.style.opacity = '0';
+                setTimeout(() => {
+                    bubble.innerText = pandaMessages[msgIndex];
+                    bubble.style.opacity = '1';
+                }, 150);
+            }
+        }, 15000);
+
+        window.onload = () => {
+            const saved = localStorage.getItem('study_hub_theme_v10') || 'sky';
+            applyCozyTheme(saved);
+        };
+    </script>
+</body>
+</html>
